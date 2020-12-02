@@ -17,7 +17,7 @@ Compile and create a `kafka-client` docker image for quick usage.
 
 ```bash
 $ make docker
-docker run --rm -it kafka-client help
+$ docker run --rm -it kafka-client help
 ```
 
 ### Local build
@@ -26,7 +26,7 @@ In order to build locally, you need to install `Go 1.12+`, and then run
 
 ```bash
 $ make mod build
-./kafka-client help
+$ ./kafka-client help
 ```
 
 ## Usage
