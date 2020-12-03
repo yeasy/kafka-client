@@ -18,6 +18,7 @@ func SendMsg(kafkaURL, topic string, numMsg, batchSize int) error {
 	if err != nil {
 		return err
 	}
+	log.Debugf("Connected to kafka %s", kafkaURL)
 	defer connLeader.Close()
 
 	lastOffsetBefore, err := getLastOffset(connLeader)
@@ -36,8 +37,8 @@ func SendMsg(kafkaURL, topic string, numMsg, batchSize int) error {
 		if err != nil {
 			log.Errorf("failed to write batch messages: %d with error=%v", i, err)
 		}
-		if i*batchSize%10000 == 0 {
-			log.Debugf("Sent %d batch messages to kafka", i)
+		if i*batchSize%100000 == 0 {
+			log.Debugf("Sent %d batched messages to kafka, with batchSize=%d", i, batchSize)
 		}
 	}
 	// send remaining messages in a batch

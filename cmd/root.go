@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	kafkaURL, cfgFile string
+	kafkaURL, cfgFile, logLevel string
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -48,6 +48,7 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.kafka-client.yaml)")
 	rootCmd.PersistentFlags().StringVar(&kafkaURL, "kafka-url", "localhost:9092", "The kafka broker URL to connect with.")
+	rootCmd.PersistentFlags().StringVar(&logLevel, "log-level", "info", "Specify the logging level from: debug|info|warn|error")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

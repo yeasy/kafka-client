@@ -13,6 +13,7 @@ var getOffsetCmd = &cobra.Command{
 	Short: "Get the last offset in the topic",
 	Long:  `Get the last offset in the topic`,
 	Run: func(cmd *cobra.Command, args []string) {
+		setLogLevel(logLevel)
 		err := kafka.GetOffset(kafkaURL, topic)
 		if err != nil {
 			log.Error(err.Error())

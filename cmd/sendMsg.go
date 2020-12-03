@@ -19,6 +19,7 @@ var sendMsgCmd = &cobra.Command{
 	Short: "Send messages to the kafka topic",
 	Long:  `Send given numbers of messages with given batch-size to the kakfa topic`,
 	Run: func(cmd *cobra.Command, args []string) {
+		setLogLevel(logLevel)
 		err := kafka.SendMsg(kafkaURL, topic, numMsg, batchSize)
 		if err != nil {
 			log.Error(err.Error())

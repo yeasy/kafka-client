@@ -14,6 +14,7 @@ var listTopicsCmd = &cobra.Command{
 	Short: "List the existing topics at the broker",
 	Long:  `List the existing topics at the broker`,
 	Run: func(cmd *cobra.Command, args []string) {
+		setLogLevel(logLevel)
 		err := kafka.ListTopics(kafkaURL)
 		if err != nil {
 			log.Error(err.Error())

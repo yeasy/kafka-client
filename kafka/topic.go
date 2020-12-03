@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/segmentio/kafka-go"
 )
 
@@ -17,6 +19,7 @@ func ListTopics(kafkaURL string) error {
 	if err != nil {
 		return err
 	}
+	log.Debugf("Connected to kafka %s", kafkaURL)
 	defer conn.Close()
 
 	partitions, err := conn.ReadPartitions()
@@ -47,6 +50,7 @@ func GetOffset(kafkaURL, topic string) error {
 		return err
 	}
 	defer conn.Close()
+	log.Debugf("Connected to kafka %s", kafkaURL)
 
 	lastOffsetBefore, err := getLastOffset(conn)
 	if err != nil {

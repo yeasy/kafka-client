@@ -49,6 +49,7 @@ Flags:
       --config string      config file (default is $HOME/.kafka-client.yaml)
   -h, --help               help for kafka-client
       --kafka-url string   The kafka broker URL to connect with. (default "localhost:9092")
+      --log-level string   Specify the logging level from: debug|info|warn|error (default "info")
   -t, --toggle             kafka-client is an efficient client to interact with kafka cluster
 
 Use "kafka-client [command] --help" for more information about a command.
@@ -69,6 +70,7 @@ Flags:
 Global Flags:
       --config string      config file (default is $HOME/.kafka-client.yaml)
       --kafka-url string   The kafka broker URL to connect with. (default "localhost:9092")
+      --log-level string   Specify the logging level from: debug|info|warn|error (default "info")
 ```
 
 ### Get Offset of a Topic
@@ -87,6 +89,7 @@ Flags:
 Global Flags:
       --config string      config file (default is $HOME/.kafka-client.yaml)
       --kafka-url string   The kafka broker URL to connect with. (default "localhost:9092")
+      --log-level string   Specify the logging level from: debug|info|warn|error (default "info")
 ```
 
 ### Send Messages to a Topic
@@ -107,6 +110,7 @@ Flags:
 Global Flags:
       --config string      config file (default is $HOME/.kafka-client.yaml)
       --kafka-url string   The kafka broker URL to connect with. (default "localhost:9092")
+      --log-level string   Specify the logging level from: debug|info|warn|error (default "info")
 ```
 
 ## Tutorial
