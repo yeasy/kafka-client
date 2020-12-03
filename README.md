@@ -55,7 +55,8 @@ Use "kafka-client [command] --help" for more information about a command.
 ```
 
 ### List Topics
-```
+
+```bash
 ./kafka-client listTopics --help
 List the existing topics at the broker
 
@@ -71,6 +72,7 @@ Global Flags:
 ```
 
 ### Get Offset of a Topic
+
 ```bash
 ./kafka-client getOffset --help
 Get the last offset in the topic
@@ -88,6 +90,7 @@ Global Flags:
 ```
 
 ### Send Messages to a Topic
+
 ```bash
 ./kafka-client sendMsg --help
 Send given numbers of messages with given batch-size to the kakfa topic
@@ -157,7 +160,7 @@ INFO[0000] Execution time is 79.7857ms
 
 ### Send Messages
 
-Send 1000,000 messages to the kakfa topic within 3s, a.k.a (350+ K tps).
+Send 1000,000 messages to the kakfa topic with hundreds of KTPS).
 
 ```bash
 $ make test-sendMsg
@@ -171,6 +174,10 @@ INFO[0000] Before sending messages, the last offset = 0
 INFO[0002] After sending 1000000 messages, the last offset = 1000000
 INFO[0002] Execution time is 2.7932098s
 ```
+
+Following figure shows the sending performance with various batch-size.
+
+![Basic sending message performance](perf.png)
 
 ### Create Docker image
 

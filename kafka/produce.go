@@ -26,7 +26,8 @@ func SendMsg(kafkaURL, topic string, numMsg, batchSize int) error {
 	}
 	log.Infof("Before sending messages, the last offset = %d\n", lastOffsetBefore)
 
-	batchMsgs := newBatchMsg(batchSize)                               // construct a batch messages
+	batchMsgs := newBatchMsg(batchSize)                               // construct a batch message
+	remainMsgs := newBatchMsg(numMsg % batchSize)                     // construct a batch message for remaining messages
 	_ = connLeader.SetWriteDeadline(time.Now().Add(30 * time.Second)) // set sending timeout
 
 	// send batch messages
@@ -35,13 +36,14 @@ func SendMsg(kafkaURL, topic string, numMsg, batchSize int) error {
 		if err != nil {
 			log.Errorf("failed to write batch messages: %d with error=%v", i, err)
 		}
-	}
-	// send remaining messages, less than a batch
-	for i := 0; i < numMsg%batchSize; i++ {
-		_, err = connLeader.WriteMessages(kafka.Message{Value: []byte("")})
-		if err != nil {
-			log.Errorf("failed to write remaining messages: %d with error=%v", i, err)
+		if i*batchSize%10000 == 0 {
+			log.Debugf("Sent %d batch messages to kafka", i)
 		}
+	}
+	// send remaining messages in a batch
+	_, err = connLeader.WriteMessages(remainMsgs...)
+	if err != nil {
+		log.Errorf("failed to write remaining messages with error=%v", err)
 	}
 
 	lastOffsetAfter, err := getLastOffset(connLeader)

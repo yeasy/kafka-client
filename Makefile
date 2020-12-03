@@ -24,7 +24,7 @@ test-sendMsg: build # test sending 1M messages
         --kafka-url "kafka0:9092" \
         --topic "test" \
         --num-msg 1000000 \
-        --batch-size 1000
+        --batch-size 4000
 
 test-listTopics: build # test listing existing topics
 	./kafka-client listTopics \
