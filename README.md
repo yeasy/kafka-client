@@ -102,10 +102,11 @@ Usage:
   kafka-client sendMsg [flags]
 
 Flags:
-      --batch-size int   Size of batch to send. (default 1000)
-  -h, --help             help for sendMsg
-      --num-msg int      Number of messages to send. (default 1000)
-      --topic string     The kafka topic to send messages to. (default "test")
+      --batch-size int      Size of batch to send. (default 1000)
+  -h, --help                help for sendMsg
+      --num-msg int         Number of messages to send. Cannot set together with target-offset
+      --target-offset int   Send message until the topic reaches the target offset. Cannot set together with num-msg
+      --topic string        The kafka topic to send messages to. (default "test")
 
 Global Flags:
       --config string      config file (default is $HOME/.kafka-client.yaml)
@@ -124,6 +125,10 @@ Create a kafka cluster with 3 brokers.
 ```bash
 $ git clone github.com/yeasy/docker-compose-files && cd docker-compose-files/kafka
 $ make restart
+$ make kafka
+bash-4.4# bash /tmp/topic_create.sh
+Create a topic test by connecting to zookeeper1 with 1 replica and 1 partition
+Created topic test.
 ```
 
 Then start a golang container to connect to the kakfa network, and map this kafka client into it.
@@ -131,6 +136,7 @@ Then start a golang container to connect to the kakfa network, and map this kafk
 ```bash
 $ git clone github.com/yeasy/kafka-client && cd kafka-client
 $ docker run --net kafka_default -it -v $PWD:/go/kafka-client golang:1.14 bash
+# cd /go/kafka-client
 ```
 
 The kakfa-client will be at the `/go/kafka-client` path inside the container.
@@ -140,10 +146,9 @@ The kakfa-client will be at the `/go/kafka-client` path inside the container.
 List the existing topics at the broker.
 
 ```bash
-make test-listTopics
-go build -o kafka-client main.go
-./kafka-client listTopics \
+$ ./kafka-client listTopics \
         --kafka-url "kafka0:9092"
+INFO[0000] GetOffset with params: kafkaURL=kafka0:9092
 1 topics: [test]
 INFO[0000] Execution time is 52.4489ms
 ```
@@ -153,28 +158,26 @@ INFO[0000] Execution time is 52.4489ms
 Get the last offset of a topic.
 
 ```bash
-$ make test-getOffset
-go build -o kafka-client main.go
-./kafka-client getOffset \
+$ ./kafka-client getOffset \
         --kafka-url "kafka0:9092" \
         --topic "test"
-Topic test's offset = 2121000
-INFO[0000] Execution time is 79.7857ms
+INFO[0000] GetOffset with params: kafkaURL=kafka0:9092, topic=test
+Topic test's offset = 1000000
+INFO[0000] Execution time is 36.818ms
 ```
 
-### Send Messages
+### Send Numbers of Messages
 
-Send 1000,000 messages to the kakfa topic with hundreds of KTPS).
+Send 1000,000 messages to the kakfa topic with hundreds of KTPS.
 
 ```bash
-$ make test-sendMsg
-go build -o kafka-client main.go
-./kafka-client sendMsg \
+$ ./kafka-client sendMsg \
         --kafka-url "kafka0:9092" \
         --topic "test" \
         --num-msg 1000000 \
         --batch-size 1000
-INFO[0000] Before sending messages, the last offset = 0
+INFO[0000] SendMsg with params: kafkaURL=kafka0:9092, topic=test, numMsg=0, batchSize=1000, targetOffset=1000000
+INFO[0000] Before sending, the last offset = 0
 INFO[0002] After sending 1000000 messages, the last offset = 1000000
 INFO[0002] Execution time is 2.7932098s
 ```
@@ -182,6 +185,22 @@ INFO[0002] Execution time is 2.7932098s
 Following figure shows the sending performance with various batch-size.
 
 ![Basic sending message performance](perf.png)
+
+### Send Messages Until Given Offset
+
+Send messages to the kakfa topic until offset=1000000.
+
+```bash
+$ ./kafka-client sendMsg \
+        --kafka-url "kafka0:9092" \
+        --topic "test" \
+        --target-offset 1000000 \
+        --batch-size 1000
+INFO[0000] SendMsg with params: kafkaURL=kafka0:9092, topic=test, numMsg=0, batchSize=1000, targetOffset=1000000
+INFO[0000] Before sending, the offset = 0
+INFO[0005] After sending 1000000 messages, the offset = 1000000
+INFO[0005] Execution time is 4.9774658s
+```
 
 ### Create Docker image
 

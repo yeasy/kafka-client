@@ -15,6 +15,7 @@ func ListTopics(kafkaURL string) error {
 	var conn *kafka.Conn
 	var names []string
 
+	log.Infof("GetOffset with params: kafkaURL=%s", kafkaURL)
 	conn, err = kafka.Dial("tcp", kafkaURL)
 	if err != nil {
 		return err
@@ -45,6 +46,7 @@ func GetOffset(kafkaURL, topic string) error {
 	var err error
 	var conn *kafka.Conn
 
+	log.Infof("GetOffset with params: kafkaURL=%s, topic=%s", kafkaURL, topic)
 	conn, err = kafka.DialLeader(context.Background(), "tcp", kafkaURL, topic, 0)
 	if err != nil {
 		return err

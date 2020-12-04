@@ -7,10 +7,10 @@ import (
 )
 
 // newBatchMsg create a message array with given batchSize
-func newBatchMsg(batchSize int) []kafka.Message {
+func newBatchMsg(batchSize int64) []kafka.Message {
 
 	var batchMsgs []kafka.Message
-	for i := 0; i < batchSize; i++ {
+	for i := int64(0); i < batchSize; i++ {
 		batchMsgs = append(batchMsgs, kafka.Message{Value: []byte("")})
 	}
 

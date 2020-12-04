@@ -9,8 +9,8 @@ import (
 )
 
 var (
-	topic             string
-	numMsg, batchSize int
+	topic                           string
+	numMsg, targetOffset, batchSize int64
 )
 
 // sendMsgCmd represents the sendMsg command
@@ -20,7 +20,7 @@ var sendMsgCmd = &cobra.Command{
 	Long:  `Send given numbers of messages with given batch-size to the kakfa topic`,
 	Run: func(cmd *cobra.Command, args []string) {
 		setLogLevel(logLevel)
-		err := kafka.SendMsg(kafkaURL, topic, numMsg, batchSize)
+		err := kafka.SendMsg(kafkaURL, topic, numMsg, targetOffset, batchSize)
 		if err != nil {
 			log.Error(err.Error())
 		}
@@ -34,6 +34,7 @@ func init() {
 	// and all subcommands, e.g.:
 	// sendMsgCmd.PersistentFlags().String("foo", "", "A help for foo")
 	sendMsgCmd.PersistentFlags().StringVar(&topic, "topic", "test", "The kafka topic to send messages to.")
-	sendMsgCmd.PersistentFlags().IntVar(&numMsg, "num-msg", 1000, "Number of messages to send.")
-	sendMsgCmd.PersistentFlags().IntVar(&batchSize, "batch-size", 1000, "Size of batch to send.")
+	sendMsgCmd.PersistentFlags().Int64Var(&numMsg, "num-msg", 0, "Number of messages to send. Cannot set together with target-offset")
+	sendMsgCmd.PersistentFlags().Int64Var(&targetOffset, "target-offset", 0, "Send message until the topic reaches the target offset. Cannot set together with num-msg")
+	sendMsgCmd.PersistentFlags().Int64Var(&batchSize, "batch-size", 1000, "Size of batch when sending.")
 }
