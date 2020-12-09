@@ -1,7 +1,7 @@
 Kafka-Client
 ===
 
-Analyze ledger files for blockchain including hyperledger fabric v1.x and v2.x.
+A quick kakfa client.
 
 ## Features
 
